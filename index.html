@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=375px, initial-scale=1.0" />
+    <title>Patient History Form</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5",
+              secondary: "#E5E7EB",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body { min-height: 100vh; background-color: #FFFFFF; }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+      }
+    </style>
+  </head>
+  <body class="w-[375px] mx-auto pb-16">
+    <nav class="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
+      <div class="flex items-center justify-between px-4 h-14">
+        <div class="flex items-center">
+          <button
+            id="backBtn"
+            class="w-8 h-8 flex items-center justify-center cursor-pointer"
+          >
+            <i class="ri-arrow-left-s-line text-xl"></i>
+          </button>
+          <h1 class="text-lg font-medium ml-2">Patient History Form</h1>
+        </div>
+        <div id="progressText" class="text-sm text-primary"></div>
+      </div>
+    </nav>
+    <main class="mt-16 px-4">
+      <form id="patientForm" class="space-y-6">
+        <section class="space-y-4">
+          <h2 class="text-lg font-medium">Personal Information</h2>
+          <div>
+            <label class="block text-sm mb-1">Full Name</label>
+            <input
+              type="text"
+              name="fullName"
+              class="w-full h-12 px-4 rounded border-none bg-gray-50"
+              required
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm mb-1">Age</label>
+              <input
+                type="number"
+                name="age"
+                class="w-full h-12 px-4 rounded border-none bg-gray-50"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm mb-1">Gender</label>
+              <select
+                name="gender"
+                class="w-full h-12 px-4 rounded border-none bg-gray-50"
+                required
+              >
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Contact Number</label>
+            <input
+              type="tel"
+              name="contact"
+              class="w-full h-12 px-4 rounded border-none bg-gray-50"
+              required
+            />
+          </div>
+        </section>
+        <section class="space-y-4">
+          <h2 class="text-lg font-medium">Medical History</h2>
+          <div>
+            <label class="block text-sm mb-1">Previous Conditions</label>
+            <textarea
+              name="medicalHistory"
+              rows="4"
+              class="w-full p-4 rounded border-none bg-gray-50"
+              required
+            ></textarea>
+          </div>
+        </section>
+        <section class="space-y-4">
+          <h2 class="text-lg font-medium">Current Symptoms</h2>
+          <div>
+            <label class="block text-sm mb-1">Describe your symptoms</label>
+            <textarea
+              name="symptoms"
+              rows="4"
+              class="w-full p-4 rounded border-none bg-gray-50"
+              required
+            ></textarea>
+          </div>
+        </section>
+        <section class="space-y-4">
+          <h2 class="text-lg font-medium">Medications</h2>
+          <div>
+            <label class="block text-sm mb-1">Current Medications</label>
+            <textarea
+              name="medications"
+              rows="4"
+              class="w-full p-4 rounded border-none bg-gray-50"
+            ></textarea>
+          </div>
+        </section>
+        <section class="space-y-4">
+          <h2 class="text-lg font-medium">Allergies</h2>
+          <div>
+            <label class="block text-sm mb-1">List any allergies</label>
+            <textarea
+              name="allergies"
+              rows="4"
+              class="w-full p-4 rounded border-none bg-gray-50"
+            ></textarea>
+          </div>
+        </section>
+        <section class="space-y-4">
+          <h2 class="text-lg font-medium">Family History</h2>
+          <div>
+            <label class="block text-sm mb-1">Family medical conditions</label>
+            <textarea
+              name="familyHistory"
+              rows="4"
+              class="w-full p-4 rounded border-none bg-gray-50"
+            ></textarea>
+          </div>
+        </section>
+      </form>
+    </main>
+    <div id="preview" class="hidden mt-16 px-4">
+      <div class="max-w 4xl mx-auto bg-white py-8" id="pdfContent">
+        <div class="text-center mb-6">
+          <h2 class="text-xl font-bold">Patient Medical History Report</h2>
+          <p class="text-sm text-gray-500" id="previewDate"></p>
+        </div>
+        <div class="grid grid-cols-1 gap-4">
+          <div class="border-b pb-4">
+            <h3 class="text-base font-semibold mb-3 text-primary">
+              Personal Information
+            </h3>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <div>
+                <span class="text-gray-500">Full Name:</span>
+                <span id="previewName" class="ml-1"></span>
+              </div>
+              <div>
+                <span class="text-gray-500">Age:</span>
+                <span id="previewAge" class="ml-1"></span>
+              </div>
+              <div>
+                <span class="text-gray-500">Gender:</span>
+                <span id="previewGender" class="ml-1"></span>
+              </div>
+              <div>
+                <span class="text-gray-500">Contact:</span>
+                <span id="previewContact" class="ml-1"></span>
+              </div>
+            </div>
+          </div>
+          <div class="border-b pb-4">
+            <h3 class="text-base font-semibold mb-2 text-primary">
+              Medical History
+            </h3>
+            <p id="previewMedicalHistory" class="text-sm"></p>
+          </div>
+          <div class="border-b pb-4">
+            <h3 class="text-base font-semibold mb-2 text-primary">
+              Current Symptoms
+            </h3>
+            <p id="previewSymptoms" class="text-sm"></p>
+          </div>
+          <div class="border-b pb-4">
+            <h3 class="text-base font-semibold mb-2 text-primary">
+              Current Medications
+            </h3>
+            <p id="previewMedications" class="text-sm"></p>
+          </div>
+          <div class="border-b pb-4">
+            <h3 class="text-base font-semibold mb-2 text-primary">Allergies</h3>
+            <p id="previewAllergies" class="text-sm"></p>
+          </div>
+          <div class="pb-4">
+            <h3 class="text-base font-semibold mb-2 text-primary">
+              Family History
+            </h3>
+            <p id="previewFamilyHistory" class="text-sm"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 px-4 py-3"
+    >
+      <div class="flex gap-4">
+        <button
+          id="previewBtn"
+          class="flex-1 h-12 bg-primary text-white rounded-button cursor-pointer"
+        >
+          Preview
+        </button>
+        <button
+          id="downloadBtn"
+          class="hidden flex-1 h-12 bg-primary text-white rounded-button cursor-pointer"
+        >
+          Download JPG
+        </button>
+        <button
+          id="editBtn"
+          class="hidden flex-1 h-12 bg-secondary text-gray-700 rounded-button cursor-pointer"
+        >
+          Edit
+        </button>
+      </div>
+    </div>
+    <script id="formHandler">
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("patientForm");
+        const preview = document.getElementById("preview");
+        const previewBtn = document.getElementById("previewBtn");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const editBtn = document.getElementById("editBtn");
+        const backBtn = document.getElementById("backBtn");
+        const progressText = document.getElementById("progressText");
+        function updateProgress() {
+          const total = form.querySelectorAll("input, textarea, select").length;
+          const filled = form.querySelectorAll(
+            "input:valid, textarea:valid, select:valid",
+          ).length;
+          const percentage = Math.round((filled / total) * 100);
+          progressText.textContent = `${percentage}% Complete`;
+        }
+        form.addEventListener("input", updateProgress);
+        updateProgress();
+        previewBtn.addEventListener("click", function () {
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+          const currentDate = new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          document.getElementById("previewDate").textContent =
+            `Report Date: ${currentDate}`;
+          document.getElementById("previewName").textContent = form.fullName.value;
+          document.getElementById("previewAge").textContent = form.age.value;
+          document.getElementById("previewGender").textContent = form.gender.value;
+          document.getElementById("previewContact").textContent = form.contact.value;
+          document.getElementById("previewMedicalHistory").textContent =
+            form.medicalHistory.value;
+          document.getElementById("previewSymptoms").textContent =
+            form.symptoms.value;
+          document.getElementById("previewMedications").textContent =
+            form.medications.value;
+          document.getElementById("previewAllergies").textContent =
+            form.allergies.value;
+          document.getElementById("previewFamilyHistory").textContent =
+            form.familyHistory.value;
+          form.classList.add("hidden");
+          preview.classList.remove("hidden");
+          previewBtn.classList.add("hidden");
+          downloadBtn.classList.remove("hidden");
+          editBtn.classList.remove("hidden");
+        });
+        editBtn.addEventListener("click", function () {
+          form.classList.remove("hidden");
+          preview.classList.add("hidden");
+          previewBtn.classList.remove("hidden");
+          downloadBtn.classList.add("hidden");
+          editBtn.classList.add("hidden");
+        });
+        downloadBtn.addEventListener("click", function () {
+          const element = document.getElementById("pdfContent");
+          const a4Width = 2480;
+          const a4Height = 3508;
+          const tempDiv = document.createElement("div");
+          tempDiv.style.width = `${a4Width}px`;
+          tempDiv.style.height = `${a4Height}px`;
+          tempDiv.style.backgroundColor = "white";
+          tempDiv.style.padding = "200px";
+          tempDiv.style.boxSizing = "border-box";
+          tempDiv.style.position = "fixed";
+          tempDiv.style.left = "-9999px";
+          tempDiv.style.top = "0";
+          const contentClone = element.cloneNode(true);
+          contentClone.style.width = "100%";
+          contentClone.style.height = "100%";
+          contentClone.style.fontSize = "48px";
+          const headings = contentClone.querySelectorAll("h2, h3");
+          headings.forEach((heading) => {
+            if (heading.tagName === "H2") {
+              heading.style.fontSize = "72px";
+              heading.style.marginBottom = "40px";
+            } else {
+              heading.style.fontSize = "56px";
+              heading.style.marginBottom = "24px";
+            }
+          });
+          const paragraphs = contentClone.querySelectorAll("p, span");
+          paragraphs.forEach((p) => {
+            p.style.fontSize = "48px";
+            p.style.lineHeight = "1.5";
+          });
+          const sections = contentClone.querySelectorAll(".border-b");
+          sections.forEach((section) => {
+            section.style.paddingBottom = "40px";
+            section.style.marginBottom = "40px";
+          });
+          tempDiv.appendChild(contentClone);
+          document.body.appendChild(tempDiv);
+          html2canvas(tempDiv, {
+            width: a4Width,
+            height: a4Height,
+            scale: 1,
+            useCORS: true,
+            logging: false,
+            letterRendering: true,
+            backgroundColor: "white",
+          }).then((canvas) => {
+            const link = document.createElement("a");
+            const patientName = form.fullName.value
+              .toLowerCase()
+              .replace(/\s+/g, "-");
+            const fileName = `${patientName}-medical-history.jpg`;
+            link.download = fileName;
+            link.href = canvas.toDataURL("image/jpeg", 1.0);
+            link.click();
+            document.body.removeChild(tempDiv);
+          });
+        });
+        backBtn.addEventListener("click", function () {
+          if (form.classList.contains("hidden")) {
+            form.classList.remove("hidden");
+            preview.classList.add("hidden");
+            previewBtn.classList.remove("hidden");
+            downloadBtn.classList.add("hidden");
+            editBtn.classList.add("hidden");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
